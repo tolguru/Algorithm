@@ -11,7 +11,7 @@ public class Bj_1449 {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(bf.readLine());
         int holeCount = Integer.parseInt(st.nextToken());
-        int tapeSize = Integer.parseInt(st.nextToken()) - 1;
+        int tapeSize = Integer.parseInt(st.nextToken());
         int[] holeLocations = new int[holeCount];
 
         st = new StringTokenizer(bf.readLine());
@@ -22,26 +22,26 @@ public class Bj_1449 {
 
         Arrays.sort(holeLocations);
 
-        int lastSumIndex = 1;
-        int holeConnectionDistanceSum = 0;
-        int beforeLocation = 0;
+        int lastSumIndex = 0;
+        int holeIntervalSum = 0;
         int usedTapeCount = 0;
+        int beforeLocation = holeLocations[0];
 
         for (int i = 0; i < holeCount; i++) {
-            int holeConnectionDistance = holeLocations[i] - beforeLocation;
+            int holeInterval = holeLocations[i] - beforeLocation;
 
-            if (holeConnectionDistance + holeConnectionDistanceSum <= tapeSize) {
-                holeConnectionDistanceSum += holeConnectionDistance;
-                beforeLocation = holeLocations[i];
+            if (holeInterval + holeIntervalSum > tapeSize) {
+                holeIntervalSum += holeInterval;
             } else {
                 lastSumIndex = i;
-                holeConnectionDistanceSum = 0;
-                beforeLocation = 0;
+                holeIntervalSum = 0;
                 usedTapeCount++;
             }
+
+            beforeLocation = holeLocations[i];
         }
 
-        if (holeConnectionDistanceSum != 0 || lastSumIndex == holeCount - 1) {
+        if (holeIntervalSum != 0 || lastSumIndex == holeCount - 1) {
             usedTapeCount++;
         }
 
