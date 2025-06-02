@@ -22,27 +22,14 @@ public class Bj_1449 {
 
         Arrays.sort(holeLocations);
 
-        int lastSumIndex = 0;
-        int holeIntervalSum = 0;
-        int usedTapeCount = 0;
+        int usedTapeCount = 1;
         int beforeLocation = holeLocations[0];
 
         for (int i = 0; i < holeCount; i++) {
-            int holeInterval = holeLocations[i] - beforeLocation;
-
-            if (holeInterval + holeIntervalSum > tapeSize) {
-                holeIntervalSum += holeInterval;
-            } else {
-                lastSumIndex = i;
-                holeIntervalSum = 0;
+            if (tapeSize <= holeLocations[i] - beforeLocation) {
                 usedTapeCount++;
+                beforeLocation = holeLocations[i];
             }
-
-            beforeLocation = holeLocations[i];
-        }
-
-        if (holeIntervalSum != 0 || lastSumIndex == holeCount - 1) {
-            usedTapeCount++;
         }
 
         System.out.println(usedTapeCount);
