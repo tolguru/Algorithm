@@ -1,47 +1,32 @@
 package greedy;
 
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Bj_11000 {
     public static void main(String[] args) throws Exception {
         int lectureCount = readInt();
-        int[][] lecturePlans = new int[lectureCount][2];
+        PriorityQueue<Lecture> lecturePlanQueue = new PriorityQueue<>(new CustomComparator());
 
         for (int i = 0; i < lectureCount; i++) {
-            lecturePlans[i][0] = readInt();
-            lecturePlans[i][1] = readInt();
+            lecturePlanQueue.offer(new Lecture(readInt(), readInt()));
         }
 
-        Arrays.sort(lecturePlans, (o1, o2) -> {
-            if (o1[1] == o2[1]) {
-                return Integer.compare(o1[0], o2[0]);
-            } else {
-                return Integer.compare(o1[1], o2[1]);
-            }
-        });
+        PriorityQueue<Integer> endTimeQueue = new PriorityQueue<>();
 
-        int maximumLectureCount = 0;
-        int activatedLectureCount = 0;
-        int lastLectureEndTime = 0;
+        endTimeQueue.offer(0);
 
-        for (int i = 0; i < lectureCount; i++) {
-            if (lastLectureEndTime < lecturePlans[i][0]) {
-                if (lastLectureEndTime > lecturePlans[i][0]) {
-                    activatedLectureCount++;
-                }
+        while (!lecturePlanQueue.isEmpty()) {
+            Lecture lecture = lecturePlanQueue.poll();
 
-                lastLectureEndTime = lecturePlans[i][1];
+            if (lecture.startTime >= endTimeQueue.peek()) {
+                endTimeQueue.poll();
             }
 
-//            if (lastLectureEndTime <= lecturePlans[i][0]) {
-//                lastLectureEndTime = lecturePlans[i][1];
-//                activatedLectureCount++;
-//            }
-
-            maximumLectureCount = Math.max(maximumLectureCount, activatedLectureCount);
+            endTimeQueue.offer(lecture.endTime);
         }
 
-        System.out.println(maximumLectureCount);
+        System.out.println(endTimeQueue.size());
     }
 
     private static int readInt() throws Exception {
@@ -57,5 +42,23 @@ public class Bj_11000 {
         }
 
         return n;
+    }
+
+    static class Lecture {
+        public int startTime;
+        public int endTime;
+
+        public Lecture(int startTime, int endTime) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+        }
+    }
+
+    static class CustomComparator implements Comparator<Lecture> {
+
+        @Override
+        public int compare(Lecture o1, Lecture o2) {
+            return Integer.compare(o1.startTime, o2.startTime);
+        }
     }
 }
