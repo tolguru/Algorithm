@@ -2,9 +2,7 @@ package greedy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Bj_1700 {
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,46 +33,23 @@ public class Bj_1700 {
             lastIndexMap.put(deviceName, i);
         }
 
-        Device[] multitap = new Device[holeCount];
+        Map<Integer, Device> multitap = new HashMap<>();
         int swapCount = 0;
 
         for (int i = 0; i < usageCount; i++) {
             Device device = devices[i];
-            int farthestDistance = 0;
-            int farthestDeviceIndex = 0;
-            boolean isReplaced = true;
 
-            for (int j = 0; j < holeCount; j++) {
-                Device usingDevice = multitap[j];
-
-                // 비어 있는 플러그일 경우
-                if (usingDevice == null) {
-                    farthestDeviceIndex = j;
-                    isReplaced = false;
-                    break;
-                } else {
-                    // 같은 장치일 경우 교체
-                    if (usingDevice.deviceName == device.deviceName) {
-                        farthestDeviceIndex = j;
-                        isReplaced = false;
-                        break;
-                    } else {
-                        // 가장 멀리 있는 장치 탐색
-                        int distance = usingDevice.distance - (i - usingDevice.index);
-
-                        if (farthestDistance < distance) {
-                            farthestDistance = distance;
-                            farthestDeviceIndex = j;
-                        }
-                    }
-                }
+            if (multitap.containsKey(device.deviceName) || multitap.size() < holeCount) {
+                multitap.put(device.deviceName, device);
+                continue;
             }
 
-            if (isReplaced) {
-                swapCount++;
-            }
+            int index = i;
 
-            multitap[farthestDeviceIndex] = device;
+            Optional<Device> max = multitap.values().stream().max(Comparator.comparingInt(o -> o.distance - (index - o.index)));
+            multitap.remove(max.get().deviceName);
+            multitap.put(device.deviceName, device);
+            swapCount++;
         }
 
         System.out.println(swapCount);
