@@ -2,7 +2,9 @@ package greedy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Bj_1700 {
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,11 +14,11 @@ public class Bj_1700 {
         int holeCount = Integer.parseInt(st.nextToken());
         int usageCount = Integer.parseInt(st.nextToken());
 
-        StringTokenizer devicesSt = new StringTokenizer(br.readLine());
+        st = new StringTokenizer(br.readLine());
         int[] usageSequence = new int[usageCount];
 
         for (int i = 0; i < usageCount; i++) {
-            usageSequence[i] = Integer.parseInt(devicesSt.nextToken());
+            usageSequence[i] = Integer.parseInt(st.nextToken());
         }
 
         Device[] devices = new Device[usageCount];
@@ -28,59 +30,65 @@ public class Bj_1700 {
             int lastIndex = lastIndexMap.getOrDefault(deviceName, i);
             int distance = lastIndex == i ? Integer.MAX_VALUE : lastIndex - i;
 
-            devices[i] = new Device(deviceName, distance);
+            devices[i] = new Device(i, deviceName, distance);
 
             lastIndexMap.put(deviceName, i);
         }
 
-        // 다음 사용까지 거리가 가장 먼 객체를 root로 지정하는 우선순위 큐
-        PriorityQueue<Device> deviceQueue = new PriorityQueue<>(new DistanceDescComparator());
+        Device[] multitap = new Device[holeCount];
         int swapCount = 0;
 
         for (int i = 0; i < usageCount; i++) {
-            deviceQueue.forEach(device -> device.distance--);
-
             Device device = devices[i];
+            int farthestDistance = 0;
+            int farthestDeviceIndex = 0;
+            boolean isReplaced = true;
 
-            // 큐에 동일한 Device가 있을 때 제거. equals 기준은 Device.deviceName
-            deviceQueue.remove(device);
+            for (int j = 0; j < holeCount; j++) {
+                Device usingDevice = multitap[j];
 
-            // 다음 사용까지 거리가 가장 먼 객체 제거
-            if (deviceQueue.size() >= holeCount) {
-                deviceQueue.poll();
+                // 비어 있는 플러그일 경우
+                if (usingDevice == null) {
+                    farthestDeviceIndex = j;
+                    isReplaced = false;
+                    break;
+                } else {
+                    // 같은 장치일 경우 교체
+                    if (usingDevice.deviceName == device.deviceName) {
+                        farthestDeviceIndex = j;
+                        isReplaced = false;
+                        break;
+                    } else {
+                        // 가장 멀리 있는 장치 탐색
+                        int distance = usingDevice.distance - (i - usingDevice.index);
+
+                        if (farthestDistance < distance) {
+                            farthestDistance = distance;
+                            farthestDeviceIndex = j;
+                        }
+                    }
+                }
+            }
+
+            if (isReplaced) {
                 swapCount++;
             }
 
-            deviceQueue.offer(device);
+            multitap[farthestDeviceIndex] = device;
         }
 
         System.out.println(swapCount);
     }
 
     static class Device {
+        public int index;
         public int deviceName;
         public int distance;
 
-        public Device(int deviceName, int distance) {
+        public Device(int index, int deviceName, int distance) {
+            this.index = index;
             this.deviceName = deviceName;
             this.distance = distance;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this.deviceName == ((Device) obj).deviceName) {
-                return true;
-            }
-
-            return super.equals(obj);
-        }
-    }
-
-    static class DistanceDescComparator implements Comparator<Device> {
-
-        @Override
-        public int compare(Device o1, Device o2) {
-            return Integer.compare(o2.distance, o1.distance);
         }
     }
 }
