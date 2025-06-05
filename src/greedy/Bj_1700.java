@@ -9,51 +9,49 @@ public class Bj_1700 {
 
     public static void main(String[] args) throws Exception {
         StringTokenizer st = new StringTokenizer(br.readLine());
-        StringTokenizer devicesSt = new StringTokenizer(br.readLine());
         int holeCount = Integer.parseInt(st.nextToken());
         int usageCount = Integer.parseInt(st.nextToken());
-//        int[] deviceUsage = new int[usageCount];
+
+        StringTokenizer devicesSt = new StringTokenizer(br.readLine());
+        int[] usageSequence = new int[usageCount];
+
+        for (int i = 0; i < usageCount; i++) {
+            usageSequence[i] = Integer.parseInt(devicesSt.nextToken());
+        }
+
         Device[] devices = new Device[usageCount];
         Map<Integer, Integer> lastIndexMap = new HashMap<>();
 
+        // 각 Device 객체는 다음 Device까지의 거리를 가진다.
         for (int i = usageCount - 1; i >= 0; i--) {
-            int deviceName = Integer.parseInt(devicesSt.nextToken());
+            int deviceName = usageSequence[i];
+            int lastIndex = lastIndexMap.getOrDefault(deviceName, i);
+            int distance = lastIndex == i ? Integer.MAX_VALUE : lastIndex - i;
 
-//            deviceUsage[i] = deviceName;
-
-            int lastIndex = lastIndexMap.getOrDefault(deviceName, 0);
-            devices[i] = new Device(deviceName, lastIndex == 0 ? 0 : lastIndex - i);
+            devices[i] = new Device(deviceName, distance);
 
             lastIndexMap.put(deviceName, i);
-
-//            if (device == null) {
-//                devices.put(deviceName, new Device(deviceName, i));
-//            } else {
-//                device.lastIndex = i;
-//            }
         }
 
-        for (int i = 0; i < devices.length; i++) {
-            System.out.println(devices[i].deviceName + " 거리 : " + devices[i].distance);
-        }
-
-        PriorityQueue<Device> queue = new PriorityQueue<>(new DistanceDescComparator());
+        // 다음 사용까지 거리가 가장 먼 객체를 root로 지정하는 우선순위 큐
+        PriorityQueue<Device> deviceQueue = new PriorityQueue<>(new DistanceDescComparator());
         int swapCount = 0;
 
         for (int i = 0; i < usageCount; i++) {
-//            Device device = devices.get(deviceUsage[i]);
+            deviceQueue.forEach(device -> device.distance--);
+
             Device device = devices[i];
 
-            if (queue.contains(device)) {
-                continue;
-            }
+            // 큐에 동일한 Device가 있을 때 제거. equals 기준은 Device.deviceName
+            deviceQueue.remove(device);
 
-            if (queue.size() >= holeCount) {
-                queue.poll();
+            // 다음 사용까지 거리가 가장 먼 객체 제거
+            if (deviceQueue.size() >= holeCount) {
+                deviceQueue.poll();
                 swapCount++;
             }
 
-            queue.offer(device);
+            deviceQueue.offer(device);
         }
 
         System.out.println(swapCount);
