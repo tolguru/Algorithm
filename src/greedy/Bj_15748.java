@@ -1,26 +1,19 @@
 package greedy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.StringTokenizer;
 
 public class Bj_15748 {
-    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
     public static void main(String[] args) throws Exception {
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        st.nextToken(); // L 버리기
-        int N = Integer.parseInt(st.nextToken());
-        int TF = Integer.parseInt(st.nextToken());
-        int TB = Integer.parseInt(st.nextToken());
+        readInt(); // L 버리기
+        int N = readInt();
+        int TF = readInt();
+        int TB = readInt();
 
         RestPoint[] restPoints = new RestPoint[N];
 
         for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            restPoints[i] = new RestPoint(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            restPoints[i] = new RestPoint(readInt(), readInt());
         }
 
         // tastiness가 가장 높은 순으로 내림차순 정렬
@@ -31,9 +24,7 @@ public class Bj_15748 {
         long lastJohnArrivedTime = 0;
         int lastX = 0;
 
-        /*
-        휴식 지점이 멀리 있고 tastiness가 높을수록 최종 점수가 커진다.
-         */
+        // 휴식 지점이 멀리 있고 tastiness가 높을수록 최종 점수가 커진다.
         for (int i = 0; i < N; i++) {
             int x = restPoints[i].x;
             int c = restPoints[i].c;
@@ -52,6 +43,17 @@ public class Bj_15748 {
         }
 
         System.out.println(tastiness);
+    }
+
+    private static int readInt() throws Exception {
+        int c;
+        int n = System.in.read() & 15;
+
+        while ((c = System.in.read()) >= 48) {
+            n = (n * 10) + (c & 15);
+        }
+
+        return n;
     }
 
     private static class RestPoint {
