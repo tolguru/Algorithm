@@ -11,7 +11,6 @@ public class Bj_13904 {
 
     public static void main(String[] args) throws Exception {
         int N = Integer.parseInt(br.readLine());
-        boolean[] schedule = new boolean[1000];
         StringTokenizer st;
         PriorityQueue<Project> queue = new PriorityQueue<>(new PointDescComparator());
 
@@ -26,6 +25,7 @@ public class Bj_13904 {
             queue.offer(project);
         }
 
+        boolean[] schedule = new boolean[1000];
         int resultPoint = 0;
 
         while (!queue.isEmpty()) {
