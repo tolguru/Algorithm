@@ -21,7 +21,7 @@ public class Bj_1493 {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         Box originalBox = new Box(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-        Queue<Integer> powerBoxQueue = new ArrayDeque<>();
+        Queue<Byte> powerBoxQueue = new ArrayDeque<>();
 
         separatedBoxDeque.offer(originalBox);
 
@@ -41,7 +41,7 @@ public class Bj_1493 {
 
                     // 같은 크기의 정사각형 박스를 모두 분리한다. 분리된 정사각형의 거듭제곱 수만 저장한다.
                     for (int i = 0; i < sameBoxCount; i++) {
-                        powerBoxQueue.offer(power);
+                        powerBoxQueue.offer((byte) power);
                     }
 
                     /*
@@ -50,7 +50,7 @@ public class Bj_1493 {
 
                     X는 분리 대기 큐에 추가할 박스 부분, O는 분리된 정사각형 부분
 
-                    좌상단 분리   천장쪽 분리
+                    좌상단 분리  천장쪽 분리
                     XXX         ---
                     XOO         -XX
                     XOO         -XX
@@ -83,9 +83,8 @@ public class Bj_1493 {
 
         while (!powerBoxQueue.isEmpty()) {
             // 박스 사이즈는 1이라고 가정하고 시작한다.
-            int boxPower = powerBoxQueue.poll();
+            byte cubePower = powerBoxQueue.poll();
             int boxSize = 1;
-            int cubePower = boxPower;
 
             while (boxSize > 0) {
                 if (cubes[cubePower] > 0) {
@@ -109,7 +108,7 @@ public class Bj_1493 {
     }
 
     private static void addSeparatedBox(int length, int width, int height) {
-        if (length * width * height > 0) {
+        if ((long) length * width * height > 0) {
             separatedBoxDeque.offer(new Box(length, width, height));
         }
     }
