@@ -8,6 +8,40 @@ public class Bj_2104 {
         for (int i = 0; i < N; i++) {
             numbers[i] = readInt();
         }
+
+        long max = 0;
+
+        for (int i = 0; i < N; i++) {
+            int base = numbers[i];
+            long sum = base;
+            int leftIndex = i - 1;
+
+            while (leftIndex >= 0) {
+                int leftNumber = numbers[leftIndex--];
+
+                if (base > leftNumber) {
+                    break;
+                }
+
+                sum += leftNumber;
+            }
+
+            int rightIndex = i + 1;
+
+            while (rightIndex < N) {
+                int rightNumber = numbers[rightIndex++];
+
+                if (base > rightNumber) {
+                    break;
+                }
+
+                sum += rightNumber;
+            }
+
+            max = Math.max(max, sum * base);
+        }
+
+        System.out.println(max);
     }
 
     private static int readInt() throws Exception {
