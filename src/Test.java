@@ -13,6 +13,6 @@ public class Test {
 //        int result = (Integer.parseInt(st.nextToken()) >> 0) * (Integer.parseInt(st.nextToken()) >> 0) * (Integer.parseInt(st.nextToken()) >> 0);
 //        System.out.println(result);
 
-        System.out.println(Math.pow(10, 11) % 12);
+        System.out.println(Math.pow(3, 11) % 12);
     }
 }
