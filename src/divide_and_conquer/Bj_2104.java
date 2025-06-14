@@ -10,9 +10,17 @@ public class Bj_2104 {
         }
 
         long max = 0;
+        int prevBase = 0;
 
         for (int i = 0; i < N; i++) {
             int base = numbers[i];
+
+            if (prevBase == base || base == 0) {
+                continue;
+            }
+
+            prevBase = base;
+
             long sum = base;
             int leftIndex = i - 1;
 
