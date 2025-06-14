@@ -1,5 +1,7 @@
 package divide_and_conquer;
 
+import java.util.ArrayList;
+
 public class Bj_2104 {
     public static void main(String[] args) throws Exception {
         int N = readInt();
@@ -11,11 +13,25 @@ public class Bj_2104 {
 
         long max = 0;
         int prevBase = 0;
+        ArrayList<Set> sets = new ArrayList<>;
+        long prevSum = 0;
 
         for (int i = 0; i < N; i++) {
             int base = numbers[i];
 
-            if (prevBase == base || base == 0) {
+            // 크면
+            // 왼쪽은 그렇게 스킵... 오른쪽은 그냥 왼쪽에서 더한 거 빼면 되는데
+
+            if (prevBase == base) {
+                prevSum -= base;
+                continue;
+            }
+
+            if (prevBase < base) {
+                max = Math.max(max, prevSum * base);
+            }
+
+            if (base == 0) {
                 continue;
             }
 
@@ -47,6 +63,7 @@ public class Bj_2104 {
             }
 
             max = Math.max(max, sum * base);
+            prevSum = sum - base;
         }
 
         System.out.println(max);
@@ -61,5 +78,15 @@ public class Bj_2104 {
         }
 
         return n;
+    }
+
+    private static class Set {
+        public int min;
+        public int sum;
+
+        public Set(int min, int sum) {
+            this.min = min;
+            this.sum = sum;
+        }
     }
 }
