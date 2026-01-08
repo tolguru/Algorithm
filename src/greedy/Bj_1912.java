@@ -21,24 +21,23 @@
 */
 
 import java.io.*;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] plain = br.readLine().split(" ");
         short[] q = new short[n];
         
         for (int i = 0; i < n; i++) {
-            q[i] = Short.parseShort(st.nextToken());
+            q[i] = Short.parseShort(plain[i]);
         }
 
         int max = Integer.MIN_VALUE;
         int sum = 0;
 
-        for (int currentNum : q) {
-            sum = Math.max(currentNum, sum + currentNum);
+        for (int i = 0; i < n; i++) {
+            sum = Math.max(sum, sum + q[i]);
             max = Math.max(max, sum);
         }
 
